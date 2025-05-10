@@ -1,14 +1,8 @@
 package control;
 
-import java.awt.event.ActionEvent;
 import java.util.Random;
-//import java.util.Scanner;
-import java.util.StringTokenizer;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
-import javafx.scene.control.TextField;
-import javafx.scene.control.TextInputControl;
 
 public class Principal {
 	
@@ -31,7 +25,8 @@ public class Principal {
 	@FXML private Button b15;
 	@FXML private Button b16;
 
-	@FXML private Button[] botonesJuego = new Button[16];
+	// Esto no se puede inyectar desde FXML, lo inicializamos manualmente
+	private Button[] botonesJuego = new Button[16];
     BotonLetra[] objetosBoton = new BotonLetra[16];
 	
 	// En el metodo initialize() permite acceder a todo lo instanciado en el construcotr de Pricipal
@@ -53,26 +48,15 @@ public class Principal {
 	/////////////////////////////////////
 	/**    FUNCIONES DE MAQUETACIÓN    */
 	/////////////////////////////////////
-	public void revelarBoton(ActionEvent event) {
-		// Del boton que clicamos, sacamos su id
-	    Button botonClicado = (Button) event.getSource();	    
-	    String idBotonClicado = botonClicado.getId();
-		
-	    // buscamos un objeto BotonLetra que su propiedad botonAsignado coincida con ese id
-		BotonLetra objetoBotonPorRevelar = null;
-		
-		for(int i = 0; i < objetosBoton.length; i++) {
-			if(objetoBotonPorRevelar == null &&
-			   objetosBoton[i].getBotonAsignado().equals(idBotonClicado)) {
-			
-				objetoBotonPorRevelar = objetosBoton[i];
+	@FXML
+	public void revelarBotonPorId(String idBoton) {
+		for (int i = 0; i < objetosBoton.length; i++) {
+			if (objetosBoton[i].getBotonAsignado().equals(idBoton)) {
+				objetosBoton[i].clicar(); // cambiar el estado
+				botonesJuego[i].setText(objetosBoton[i].imprimirSegunEstado()); // actualizar el texto del botón
+				break;
 			}
 		}
-		// le damos la vuelta (invocar funcion clicar() que cambiará el estado de la porpiedad 'clicar')
-		objetoBotonPorRevelar.clicar();
-		
-		// segun la propiedad 'clicar', revelar la cara o la cruz del boton
-		botonClicado.setText(objetoBotonPorRevelar.imprimirSegunEstado());
 	}
 	
 	////////////////////////////////////////////////////
